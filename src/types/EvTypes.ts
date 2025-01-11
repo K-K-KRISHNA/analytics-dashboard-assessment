@@ -57,7 +57,7 @@ export const columns: EVTableProps["columns"] = [
   },
   {
     key: "country",
-    text: "Country",
+    text: "County",
   },
   {
     key: "city",

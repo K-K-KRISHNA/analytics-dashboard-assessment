@@ -133,8 +133,16 @@ const EVTable = ({ columns, data: rawData }: EVTableProps) => {
     setData(rawData);
   }, [rawData]);
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <Stack direction={"row"} justifyContent={"space-between"}>
+    <Paper sx={{ width: "100%", overflow: "hidden", p: 1 }}>
+      <Typography fontWeight={"bold"} textAlign={"center"}>
+        Detailed Vehicle Information
+      </Typography>
+      <Stack
+        direction={{ xs: "column", lg: "row" }}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        gap={3}
+      >
         <TextField
           size="small"
           value={searchText}

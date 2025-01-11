@@ -1,7 +1,10 @@
+import { Stack } from "@mui/material";
 import Papa from "papaparse";
 import React, { useEffect, useState } from "react";
-import Table from "../table/EVTable.tsx";
+import EVBarCharts from "../barchart/EVBarChart.tsx";
+import EVPieChart from "../pieChart/EVPieChart.tsx";
 import { columns, EVColumns, evColumnsKeys } from "./../../types/EvTypes.ts";
+import EVTable from "./../table/EVTable.tsx";
 import csvFile from "./Electric_Vehicle_Population_Data.csv";
 const Home = () => {
   const [finalData, setFinalData] = useState<EVColumns[]>([]);
@@ -31,7 +34,19 @@ const Home = () => {
     setFinalData(jsonData);
   };
 
-  return <Table columns={columns} data={finalData} />;
+  return (
+    <Stack p={2} gap={6} sx={{ boxSizing: "border-box" }}>
+      <Stack
+        alignItems={"center"}
+        direction={{ xs: "column", lg: "row" }}
+        justifyContent={"space-between"}
+      >
+        <EVPieChart columns={columns} data={finalData} />
+        <EVBarCharts columns={columns} data={finalData} />
+      </Stack>
+      <EVTable columns={columns} data={finalData} />
+    </Stack>
+  );
 };
 
 export default Home;
