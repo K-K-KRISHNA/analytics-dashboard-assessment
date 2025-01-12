@@ -56,7 +56,7 @@ const Home = () => {
             fontWeight={"bold"}
             fontSize={16}
             color="primary"
-            mt={-7.5}
+            mt={{ xs: 0, md: -7.5 }}
             textAlign={"center"}
           >
             Please Wait We are Preparing the Best...
