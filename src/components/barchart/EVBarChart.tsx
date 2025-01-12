@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   Bar,
@@ -19,7 +19,7 @@ type SingleData = {
   Nissan: number;
   others: number;
 };
-const EVBarCharts = ({ columns, data }: EVTableProps) => {
+const EVBarCharts = ({ data }: { data: EVTableProps["data"] }) => {
   const [barData, setBarData] = useState<SingleData[]>([]);
   function groupByYearWithMakes(rawData: EVColumns[]): SingleData[] {
     const targetMakes = ["TESLA", "NISSAN", "CHEVROLET"];
@@ -55,13 +55,13 @@ const EVBarCharts = ({ columns, data }: EVTableProps) => {
   }, [data]);
 
   return (
-    <div style={{ width: "100%", height: 400 }}>
-      <Typography textAlign={"center"} fontWeight={"bold"}>
+    <Box sx={{ width: "100%", height: 400 }}>
+      <Typography variant="h1" mb={3}>
         Last 10 Years Trends in EV Production
       </Typography>
       <ResponsiveContainer>
         <BarChart
-          data={barData.filter((each) => each.name >= 2014)}
+          data={barData.filter((each) => each.name >= 2015)}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -70,12 +70,12 @@ const EVBarCharts = ({ columns, data }: EVTableProps) => {
           <Tooltip />
           <Legend />
           <Bar dataKey="Tesla" fill="#8884d8" />
-          <Bar dataKey="Chevrolet" fill="#82ca9d" />
-          <Bar dataKey="Nissan" fill="#52ca9d" />
+          <Bar dataKey="Chevrolet" fill="#8E1616" />
+          <Bar dataKey="Nissan" fill="#155E95" />
           <Bar dataKey="others" fill="#12ca9d" />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };
 

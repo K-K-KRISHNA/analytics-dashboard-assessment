@@ -1,15 +1,22 @@
-import { Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
+import Lottie from "lottie-react";
 import Papa from "papaparse";
 import React, { useEffect, useState } from "react";
 import EVBarCharts from "../barchart/EVBarChart.tsx";
 import EVPieChart from "../pieChart/EVPieChart.tsx";
 import { columns, EVColumns, evColumnsKeys } from "./../../types/EvTypes.ts";
 import EVTable from "./../table/EVTable.tsx";
+import Loading from "./Animation - 1736649610454.json";
 import csvFile from "./Electric_Vehicle_Population_Data.csv";
+
 const Home = () => {
   const [finalData, setFinalData] = useState<EVColumns[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
     fetch(csvFile)
       .then((response) => response.text())
       .then((csvText) => {
@@ -34,15 +41,44 @@ const Home = () => {
     setFinalData(jsonData);
   };
 
+  if (isLoading)
+    return (
+      <Stack
+        width={"100%"}
+        height={"100vh"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        sx={{ backgroundColor: "#FF650020" }}
+      >
+        <Box width={{ xs: 200, sm: 275, md: 450 }}>
+          <Lottie animationData={Loading} loop={true} />
+          <Typography
+            fontWeight={"bold"}
+            fontSize={16}
+            color="primary"
+            mt={-7.5}
+            textAlign={"center"}
+          >
+            Please Wait We are Preparing the Best...
+          </Typography>
+        </Box>
+      </Stack>
+    );
+
   return (
-    <Stack p={2} gap={6} sx={{ boxSizing: "border-box" }}>
+    <Stack
+      p={2}
+      rowGap={10}
+      sx={{ boxSizing: "border-box", backgroundColor: "#FF650020" }}
+    >
       <Stack
         alignItems={"center"}
         direction={{ xs: "column", lg: "row" }}
         justifyContent={"space-between"}
+        rowGap={10}
       >
-        <EVPieChart columns={columns} data={finalData} />
-        <EVBarCharts columns={columns} data={finalData} />
+        <EVPieChart data={finalData} />
+        <EVBarCharts data={finalData} />
       </Stack>
       <EVTable columns={columns} data={finalData} />
     </Stack>

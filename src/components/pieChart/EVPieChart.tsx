@@ -1,12 +1,13 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { EVColumns, EVTableProps } from "../../types/EvTypes";
 
-const EVPieChart = ({ data, columns }: EVTableProps) => {
+const EVPieChart = ({ data }: { data: EVTableProps["data"] }) => {
   const [pieData, setPieData] = useState<{ label: string; value: number }[]>(
     []
   );
+  const moreThan400 = useMediaQuery("(min-width:400px)");
   const groupDataByCountry = (data: EVColumns[]) => {
     const groupedData: { [key: string]: number } = {};
     data.forEach((item) => {
@@ -42,24 +43,37 @@ const EVPieChart = ({ data, columns }: EVTableProps) => {
     setPieData(groupedData);
   }, [data]);
 
+  const total = useMemo(() => {
+    let sum = 0;
+    for (let each of pieData) {
+      sum += each.value;
+    }
+    return sum;
+  }, [pieData]);
+
   return (
-    <Paper sx={{ width: "100%", py: 2 }}>
-      <Stack direction={"column"} justifyContent={"space-around"}>
-        <Typography mb={10} fontWeight={"bold"} textAlign={"center"}>
-          County-wise Vehicle Distribution
-        </Typography>
+    <Box sx={{ width: "100%", py: 2 }}>
+      <Stack direction={"column"} justifyContent={"space-between"}>
+        <Stack mb={10}>
+          <Typography variant="h1">County-wise Vehicle Distribution</Typography>
+          <Typography variant="body2">
+            ( Tap on Each Portion To View More Details )
+          </Typography>
+        </Stack>
         <PieChart
           series={[
             {
+              valueFormatter: (obj) =>
+                `${obj.value} ( ${((obj.value / total) * 100).toFixed(2)}% )`,
               data: pieData,
               highlightScope: { fade: "global", highlight: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
             },
           ]}
-          height={200}
+          height={moreThan400 ? 200 : 200}
         />
       </Stack>
-    </Paper>
+    </Box>
   );
 };
 export default EVPieChart;
