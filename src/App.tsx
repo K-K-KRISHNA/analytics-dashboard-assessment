@@ -1,12 +1,13 @@
+import { ThemeProvider } from "@mui/material";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
 import Home from "./components/home/Home.tsx";
+import { theme } from "./theme/theme.ts";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <Home />
+    </ThemeProvider>
   );
 };
 
