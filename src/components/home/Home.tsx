@@ -3,6 +3,7 @@ import Lottie from "lottie-react";
 import Papa from "papaparse";
 import React, { useEffect, useState } from "react";
 import EVBarCharts from "../barchart/EVBarChart.tsx";
+import OverViewCards from "../overViewCards/OverViewCards.tsx";
 import EVPieChart from "../pieChart/EVPieChart.tsx";
 import { columns, EVColumns, evColumnsKeys } from "./../../types/EvTypes.ts";
 import EVTable from "./../table/EVTable.tsx";
@@ -71,15 +72,17 @@ const Home = () => {
       rowGap={10}
       sx={{ boxSizing: "border-box", backgroundColor: "#FF650020" }}
     >
+      <OverViewCards data={finalData} />
       <Stack
         alignItems={"center"}
         direction={{ xs: "column", lg: "row" }}
         justifyContent={"space-between"}
         rowGap={10}
       >
-        <EVPieChart data={finalData} />
-        <EVBarCharts data={finalData} />
+        <EVPieChart data={finalData} isGroupByModels={true} />
+        <EVPieChart data={finalData} isGroupByModels={false} />
       </Stack>
+      <EVBarCharts data={finalData} />
       <EVTable columns={columns} data={finalData} />
     </Stack>
   );

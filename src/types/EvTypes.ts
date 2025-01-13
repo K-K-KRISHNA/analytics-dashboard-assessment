@@ -95,3 +95,9 @@ export type SortByTypes =
   | "SORT_BY_RANGE_LOW_TO_HIGH"
   | "SORT_BY_RANGE_HIGH_TO_LOW"
   | "NONE";
+
+export interface EachCardData {
+  title: string;
+  value: string;
+  imagePath: string;
+}

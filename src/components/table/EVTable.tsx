@@ -414,19 +414,13 @@ const EVTable = ({ columns, data: rawData }: EVTableProps) => {
           "::-webkit-scrollbar": {
             width: "7.5px",
           },
-
-          /* Track */
           "::-webkit-scrollbar-track": {
             borderRadius: "10px",
           },
-
-          /* Handle */
           "::-webkit-scrollbar-thumb": {
             background: "#FF650050",
             borderRadius: "10px",
           },
-
-          /* Handle on hover */
           "::-webkit-scrollbar-thumb:hover": {
             background: "#FF6500 ",
           },
@@ -448,8 +442,8 @@ const EVTable = ({ columns, data: rawData }: EVTableProps) => {
           <TableBody>
             {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <Row row={row} columns={columns} />
+              .map((row, index) => (
+                <Row row={row} columns={columns} key={"sample" + index} />
               ))}
           </TableBody>
         </Table>
@@ -479,8 +473,9 @@ const EVTable = ({ columns, data: rawData }: EVTableProps) => {
           "aria-labelledby": "basic-button",
         }}
       >
-        {["City", "County", "Make"].map((each) => (
+        {["City", "County", "Make"].map((each, index) => (
           <MenuItem
+            key={"sort" + index}
             disableTouchRipple
             onClick={() => handleClose(each as typeof searchBy)}
             sx={{ fontSize: "12px" }}
