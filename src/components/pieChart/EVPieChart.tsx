@@ -3,11 +3,18 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import React, { useEffect, useMemo, useState } from "react";
 import { EVColumns, EVTableProps } from "../../types/EvTypes";
 
-const EVPieChart = ({ data }: { data: EVTableProps["data"] }) => {
+const EVPieChart = ({
+  data,
+  isGroupByModels,
+}: {
+  data: EVTableProps["data"];
+  isGroupByModels: boolean;
+}) => {
   const [pieData, setPieData] = useState<{ label: string; value: number }[]>(
     []
   );
   const moreThan400 = useMediaQuery("(min-width:400px)");
+
   const groupDataByCountry = (data: EVColumns[]) => {
     const groupedData: { [key: string]: number } = {};
     data.forEach((item) => {
@@ -38,9 +45,43 @@ const EVPieChart = ({ data }: { data: EVTableProps["data"] }) => {
     return sortedData;
   };
 
+  const groupDataByModel = (data: EVColumns[]) => {
+    const groupedData: { [key: string]: number } = {};
+    data.forEach((item) => {
+      const model = item.model;
+      if (groupedData[model]) {
+        groupedData[model]++;
+      } else {
+        groupedData[model] = 1;
+      }
+    });
+    const sortedData = Object.keys(groupedData)
+      .map((model) => ({
+        label: model,
+        value: groupedData[model],
+      }))
+      .sort((first, second) => second.value - first.value);
+    if (sortedData.length > 5) {
+      const top5Models = sortedData.slice(0, 5);
+      const others = sortedData.slice(5).reduce(
+        (acc, curr) => {
+          acc.value += curr.value;
+          return acc;
+        },
+        { label: "Others", value: 0 }
+      );
+      return [...top5Models, others];
+    }
+
+    return sortedData;
+  };
+
   useEffect(() => {
-    const groupedData = groupDataByCountry(data);
+    const groupedData = isGroupByModels
+      ? groupDataByModel(data)
+      : groupDataByCountry(data);
     setPieData(groupedData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const total = useMemo(() => {
@@ -55,7 +96,9 @@ const EVPieChart = ({ data }: { data: EVTableProps["data"] }) => {
     <Box sx={{ width: "100%", py: 2 }}>
       <Stack direction={"column"} justifyContent={"space-between"}>
         <Stack mb={10}>
-          <Typography variant="h1">County-wise Vehicle Distribution</Typography>
+          <Typography variant="h1">
+            {isGroupByModels ? "Model" : "County"} wise Vehicle Distribution
+          </Typography>
           <Typography variant="body2">
             ( Tap on Each Portion To View More Details )
           </Typography>
@@ -68,8 +111,22 @@ const EVPieChart = ({ data }: { data: EVTableProps["data"] }) => {
               data: pieData,
               highlightScope: { fade: "global", highlight: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
+              innerRadius: isGroupByModels ? 70 : undefined,
+              outerRadius: isGroupByModels ? 90 : undefined,
             },
           ]}
+          colors={
+            isGroupByModels
+              ? [
+                  "#D0A2F7",
+                  "#A72693",
+                  "#D2DE32",
+                  "#B7EFCD",
+                  "#FF4545",
+                  "#FDD043",
+                ]
+              : undefined
+          }
           height={moreThan400 ? 200 : 200}
         />
       </Stack>
